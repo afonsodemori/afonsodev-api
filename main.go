@@ -19,7 +19,7 @@ func main() {
 
 	http.HandleFunc("/", redirectHandler)
 
-	addr := fmt.Sprintf("127.0.0.1:%s", port)
+	addr := fmt.Sprintf("0.0.0.0:%s", port)
 	log.Printf("Server starting on port %s...", port)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
