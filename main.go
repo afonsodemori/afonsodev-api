@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,11 +11,12 @@ import (
 )
 
 type SendEmailRequest struct {
-	Name    string `json:"name"`
-	Email   string `json:"email"`
-	Subject string `json:"subject"`
-	Message string `json:"message"`
-	Token   string `json:"token"`
+	Name       string `json:"name"`
+	Email      string `json:"email"`
+	Subject    string `json:"subject"`
+	Message    string `json:"message"`
+	Token      string `json:"token"`
+	Challenger string `json:"challenger"`
 }
 
 type SendEmailResponse struct {
@@ -82,23 +84,23 @@ func sendEmailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recaptchaSuccess, recaptchaErrors, err := VerifyRecaptcha(req.Token)
+	challengeSuccess, challengeErrors, err := verifyChallenger(req.Token, req.Challenger)
 	if err != nil {
-		log.Printf("reCAPTCHA verification error: %v", err)
+		log.Printf("Challenge verification error: %v", err)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(SendEmailResponse{Success: false, Error: "reCAPTCHA verification failed"})
+		json.NewEncoder(w).Encode(SendEmailResponse{Success: false, Error: "Challenge verification failed"})
 		return
 	}
 
-	if !recaptchaSuccess {
-		log.Printf("reCAPTCHA verification unsuccessful: %v", recaptchaErrors)
+	if !challengeSuccess {
+		log.Printf("Challenge verification unsuccessful: %v", challengeErrors)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(SendEmailResponse{
 			Success: false,
 			Error:   "contact.form.captcha.invalid",
-			Details: recaptchaErrors,
+			Details: challengeErrors,
 		})
 		return
 	}
@@ -123,6 +125,17 @@ func sendEmailHandler(w http.ResponseWriter, r *http.Request) {
 		Message: "contact.form.success",
 		Details: resendApiResponse,
 	})
+}
+
+func verifyChallenger(token, challenger string) (bool, []string, error) {
+	switch challenger {
+	case "", "captcha":
+		return VerifyRecaptcha(token)
+	case "turnstile":
+		return VerifyTurnstile(token)
+	default:
+		return false, []string{"unknown-challenger"}, errors.New("unknown challenger type")
+	}
 }
 
 func main() {
