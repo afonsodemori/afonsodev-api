@@ -3,7 +3,7 @@ run:
 	@set -a; \
 	[ -f .env ] && . ./.env; \
 	set +a; \
-	go run main.go
+	go run .
 
 .PHONY: gemini
 gemini:
