@@ -5,7 +5,9 @@
   "workspaceFolder": "/app",
 
   "mounts": [
+    // "source=/run/host-services/ssh-auth.sock,target=/ssh-agent,type=bind",
     "source=cloudflared,target=/home/vscode/.cloudflared,type=volume",
+    "source=gemini,target=/home/vscode/.gemini,type=volume",
     "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached"
   ],
 
