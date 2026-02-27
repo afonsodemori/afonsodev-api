@@ -1,7 +1,11 @@
 include .env
 
+# development
+
 run:
 	go run .
+
+# cloudflare tunnel
 
 tunnel-init:
 	cloudflared tunnel login
@@ -11,10 +15,23 @@ tunnel-init:
 tunnel-run:
 	cloudflared tunnel --config=.devcontainer/cloudflared/config.yml run dev-afonsodev-api
 
+# docker
+
 docker-build:
-	docker buildx build \
+	@echo "Building Docker image $(IMAGE_NAME) with GO_VERSION=$(GO_VERSION)"
+	@ARGS=; \
+	for tag in $$(echo "$(IMAGE_TAGS)" | tr ',' ' '); do \
+		echo "Adding tag: $$tag"; \
+		ARGS="$$ARGS --tag $(IMAGE_NAME):$$tag"; \
+	done; \
+	docker buildx build . \
 		--platform linux/amd64,linux/arm64 \
+		--file docker/Dockerfile.production \
 		--build-arg GO_VERSION=$(GO_VERSION) \
-		--tag registry.gitlab.com/afonsodemori/afonsodev-api:latest \
-		--push \
-		.
+		$$ARGS
+
+docker-push: docker-build
+	@for tag in $$(echo "$(IMAGE_TAGS)" | tr ',' ' '); do \
+		echo "Pushing tag: $$tag"; \
+		docker push $(IMAGE_NAME):$$tag; \
+	done
