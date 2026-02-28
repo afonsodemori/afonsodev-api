@@ -9,11 +9,11 @@ run:
 
 tunnel-init:
 	cloudflared tunnel login
-	cloudflared tunnel create dev-afonsodev-api
-	cloudflared tunnel route dns --overwrite-dns dev-afonsodev-api dev-afonsodev-api.afonso.dev
+	cloudflared tunnel create afonsodev-api || true
+	cloudflared tunnel route dns --overwrite-dns afonsodev-api dev-afonsodev-api.afonso.dev
 
 tunnel-run:
-	cloudflared tunnel --config=.devcontainer/cloudflared/config.yml run dev-afonsodev-api
+	cloudflared tunnel --config=.devcontainer/cloudflared/config.yml run afonsodev-api
 
 # docker
 

@@ -1,3 +1,5 @@
+# protocol: http2
+
 ingress:
   - hostname: dev-afonsodev-api.afonso.dev
     service: http://host.docker.internal:8080
