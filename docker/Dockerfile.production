@@ -6,7 +6,7 @@ COPY go.mod ./
 #COPY go.mod go.sum ./
 #RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-s -w" -o afonsodev-api .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-s -w" -o afonsodev-api ./cmd/server
 
 FROM scratch
 WORKDIR /app

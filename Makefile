@@ -3,7 +3,7 @@ include .env
 # development
 
 run:
-	go run .
+	go run ./cmd/server
 
 # cloudflare tunnel
 
