@@ -5,17 +5,18 @@
   "workspaceFolder": "/app",
 
   "mounts": [
+    // cli
+    "source=${localEnv:HOME}/.fns-cli,target=/home/vscode/.fns-cli,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.bash_history,target=/home/vscode/.bash_history,type=bind,consistency=cached",
+    // devtools
     "source=${localEnv:HOME}/.cloudflared,target=/home/vscode/.cloudflared,type=bind,consistency=cached",
     "source=gemini,target=/home/vscode/.gemini,type=volume",
+    // source code
     "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached"
   ],
 
   "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-      "moby": false
-    },
-    "ghcr.io/devcontainers/features/go:1": { "version": "1.25.6" },
-    "ghcr.io/devcontainers/features/node:1": { "version": "24" },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": { "moby": false },
     "ghcr.io/devcontainers-extra/features/cloudflared:1": {}
   },
 
