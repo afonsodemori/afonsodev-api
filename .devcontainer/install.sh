@@ -7,3 +7,6 @@ grep -qxF 'source ~/fns-cli.bash_profile' "$HOME/.bashrc" || printf '\nsource ~/
 
 # Ensure gemini directory is writable
 sudo chown -R vscode:vscode /home/vscode/.gemini || true
+
+echo "Upgrading npm packages..."
+npm upgrade -g
