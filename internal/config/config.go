@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+var (
+	Commit  = "unknown"
+	BuiltAt = "unknown"
+)
+
 type Config struct {
 	Port            string
 	Env             string
