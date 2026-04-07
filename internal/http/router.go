@@ -24,10 +24,12 @@ func NewRouter(allowedOrigins []string, contactHandler *contact.Handler) http.Ha
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	health := struct {
 		Status  string `json:"status"`
+		Service string `json:"service"`
 		Commit  string `json:"commit"`
 		BuiltAt string `json:"built_at"`
 	}{
 		Status:  "up",
+		Service: "afonsodev-api",
 		Commit:  config.Commit,
 		BuiltAt: config.BuiltAt,
 	}
