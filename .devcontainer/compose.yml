@@ -2,3 +2,12 @@ services:
   app:
     image: ghcr.io/afonsodemori/devcontainers/golang:1.26
     command: sleep infinity
+    networks:
+      shared:
+        aliases:
+          - api.afonsodev.localhost
+
+networks:
+  shared:
+    external: true
+    name: devcontainer-network
